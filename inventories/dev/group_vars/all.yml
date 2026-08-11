@@ -1,0 +1,30 @@
+# Environment
+environment: dev
+
+# GCP
+gcp_project_id: anz-dev-project
+gcp_region: australia-southeast1
+
+# Control-M
+controlm_server: controlm-dev.company.com
+controlm_port: 7006
+
+# Splunk
+splunk_deployment_server: splunk-dev.company.com:8089
+
+# OpenTelemetry
+otel_endpoint: https://otel-dev.company.com:4317
+
+# Connect:Direct
+connectdirect_server: cd-dev.company.com
+connectdirect_port: 1364
+
+# Common Linux
+timezone: Australia/Sydney
+ntp_server: ntp.company.com
+
+# Artifact Repository
+artifact_repo_url: https://artifact.company.com
+
+# Secret Manager
+secret_prefix: dev

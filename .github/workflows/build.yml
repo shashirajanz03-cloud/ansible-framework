@@ -1,0 +1,68 @@
+name: Deploy Ansible
+
+on:
+  push:
+    branches:
+      - dev
+      - stg
+      - main
+
+permissions:
+  contents: read
+  id-token: write
+
+env:
+  ANSIBLE_HOST_KEY_CHECKING: False
+
+jobs:
+
+  deploy:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.11"
+
+    - name: Install Ansible
+      run: |
+        pip install ansible
+
+    - name: Determine Environment
+      id: env
+
+      run: |
+
+        if [[ "${GITHUB_REF_NAME}" == "dev" ]]; then
+          echo "inventory=inventories/dev" >> $GITHUB_OUTPUT
+        elif [[ "${GITHUB_REF_NAME}" == "stg" ]]; then
+          echo "inventory=inventories/stg" >> $GITHUB_OUTPUT
+        elif [[ "${GITHUB_REF_NAME}" == "main" ]]; then
+          echo "inventory=inventories/prod" >> $GITHUB_OUTPUT
+        fi
+
+    - name: Authenticate to GCP
+      uses: google-github-actions/auth@v2
+      with:
+        workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
+        service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+
+    - name: Configure SSH
+
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.ANSIBLE_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+
+    - name: Deploy
+      run: |
+
+        ansible-playbook \
+        playbooks/site.yml \
+        -i ${{ steps.env.outputs.inventory }}/hosts.yml
