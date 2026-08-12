@@ -1,2 +1,15 @@
 ---
-controlm_port: 7006
+# defaults file for roles/control-m
+
+
+controlm_install_dir: "/opt/controlm"
+
+controlm_service_name: "controlm-agent"
+
+controlm_version: "9.0"
+
+controlm_server: "dummy-controlm-server"
+
+controlm_agent_name: "agent01"
+
+controlm_port: 7005

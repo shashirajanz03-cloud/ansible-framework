@@ -1,0 +1,9 @@
+---
+
+- name: Create registration file
+  copy:
+    dest: "{{ controlm_install_dir }}/registered.txt"
+    content: |
+      SERVER={{ controlm_server }}
+      AGENT={{ controlm_agent_name }}
+      STATUS=REGISTERED

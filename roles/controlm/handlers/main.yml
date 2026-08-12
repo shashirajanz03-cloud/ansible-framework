@@ -1,1 +1,6 @@
 ---
+# handlers file for roles/control-m
+
+- name: Restart Control-M Agent
+  debug:
+    msg: "Restarting Control-M Agent..."

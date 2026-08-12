@@ -1,0 +1,15 @@
+---
+- name: Create Control-M installation directory
+  file:
+    path: "{{ controlm_install_dir }}"
+    state: directory
+    mode: "0755"
+
+- name: Create installation marker
+  file:
+    path: "{{ controlm_install_dir }}/installed.txt"
+    state: touch
+
+- name: Display installation message
+  debug:
+    msg: "Control-M Agent installed successfully."

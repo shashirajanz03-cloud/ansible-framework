@@ -1,2 +1,8 @@
 ---
-# import task files
+- import_tasks: install.yml
+
+- import_tasks: configure.yml
+
+- import_tasks: register.yml
+
+- import_tasks: validate.yml
