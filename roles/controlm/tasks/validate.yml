@@ -1,0 +1,17 @@
+---
+- name: Verify installation marker
+  stat:
+    path: "{{ controlm_install_dir }}/installed.txt"
+  register: install_status
+
+- name: Verify registration marker
+  stat:
+    path: "{{ controlm_install_dir }}/registered.txt"
+  register: register_status
+
+- name: Display validation result
+  debug:
+    msg: "Control-M validation completed successfully."
+  when:
+    - install_status.stat.exists
+    - register_status.stat.exists

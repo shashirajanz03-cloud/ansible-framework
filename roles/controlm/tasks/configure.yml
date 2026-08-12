@@ -1,0 +1,17 @@
+---
+- name: Create configuration directory
+  file:
+    path: "{{ controlm_install_dir }}/config"
+    state: directory
+
+- name: Create dummy configuration file
+  copy:
+    dest: "{{ controlm_install_dir }}/config/controlm.conf"
+    content: |
+      SERVER={{ controlm_server }}
+      AGENT={{ controlm_agent_name }}
+      PORT={{ controlm_port }}
+
+- name: Display configuration message
+  debug:
+    msg: "Control-M Agent configured successfully."
