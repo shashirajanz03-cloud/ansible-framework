@@ -1,0 +1,10 @@
+---
+- name: Reload systemd
+  ansible.builtin.systemd:
+    daemon_reload: true
+
+- name: Restart ConnectDirect
+  ansible.builtin.systemd:
+    name: "{{ connectdirect_service_name }}"
+    state: restarted
+  when: not ansible_check_mode

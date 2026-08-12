@@ -1,0 +1,19 @@
+environment: dev
+gcp_project_id: anz-dev-project
+secret_prefix: dev
+
+artifact_repo_url: https://artifact.example.com
+
+connectdirect_package_name: cdunix-installer.tar.gz
+connectdirect_installer_source: "{{ artifact_repo_url }}/connectdirect/{{ connectdirect_package_name }}"
+connectdirect_local_node: CD_DEV_NODE
+connectdirect_listen_port: 1364
+connectdirect_install_dir: /opt/cdunix
+connectdirect_runtime_user: cduser
+connectdirect_runtime_group: cdgroup
+
+connectdirect_partner_nodes:
+  - name: PARTNER01
+    host: partner01.example.com
+    port: 1364
+    protocol: tcpip

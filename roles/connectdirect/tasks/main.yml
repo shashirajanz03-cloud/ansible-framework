@@ -1,0 +1,35 @@
+---
+- name: Validate required variables for Connect:Direct
+  ansible.builtin.assert:
+    that:
+      - environment is defined
+      - gcp_project_id is defined
+      - secret_prefix is defined
+      - connectdirect_install_dir is defined
+      - connectdirect_runtime_user is defined
+      - connectdirect_runtime_group is defined
+      - connectdirect_local_node is defined
+      - connectdirect_listen_port is defined
+    fail_msg: "Required Connect:Direct variables are missing. Check inventories/<env>/group_vars/all.yml."
+
+- name: Run Connect:Direct prerequisites
+  ansible.builtin.import_tasks: prereq.yml
+
+- name: Read Connect:Direct secrets from GCP Secret Manager
+  ansible.builtin.import_tasks: secrets.yml
+
+- name: Install Connect:Direct
+  ansible.builtin.import_tasks: install.yml
+
+- name: Configure Connect:Direct
+  ansible.builtin.import_tasks: configure.yml
+
+- name: Configure Secure Plus for Connect:Direct
+  ansible.builtin.import_tasks: secureplus.yml
+  when: connectdirect_secureplus_enabled | bool
+
+- name: Manage Connect:Direct service
+  ansible.builtin.import_tasks: service.yml
+
+- name: Validate Connect:Direct installation
+  ansible.builtin.import_tasks: validate.yml

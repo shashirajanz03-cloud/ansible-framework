@@ -1,0 +1,20 @@
+---
+- name: Deploy Connect:Direct systemd unit
+  ansible.builtin.template:
+    src: connectdirect.service.j2
+    dest: "/etc/systemd/system/{{ connectdirect_service_name }}.service"
+    owner: root
+    group: root
+    mode: "0644"
+  notify:
+    - Reload systemd
+    - Restart ConnectDirect
+
+- name: Flush handlers before service validation
+  ansible.builtin.meta: flush_handlers
+
+- name: Enable and start Connect:Direct service
+  ansible.builtin.systemd:
+    name: "{{ connectdirect_service_name }}"
+    enabled: true
+    state: started

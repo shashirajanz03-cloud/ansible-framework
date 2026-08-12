@@ -1,0 +1,27 @@
+---
+# Default values for Connect:Direct role.
+# Environment-specific values should be in inventories/<env>/group_vars/all.yml.
+
+connectdirect_install_dir: /opt/cdunix
+connectdirect_staging_dir: /tmp/connectdirect
+connectdirect_runtime_user: cduser
+connectdirect_runtime_group: cdgroup
+connectdirect_service_name: connectdirect
+connectdirect_listen_port: 1364
+
+connectdirect_package_name: cdunix-installer.tar.gz
+connectdirect_installer_source: "{{ artifact_repo_url | default('') }}/connectdirect/{{ connectdirect_package_name }}"
+connectdirect_installer_archive: "{{ connectdirect_staging_dir }}/{{ connectdirect_package_name }}"
+connectdirect_installer_extract_dir: "{{ connectdirect_staging_dir }}/installer"
+connectdirect_install_marker: "{{ connectdirect_install_dir }}/.ansible_connectdirect_installed"
+
+connectdirect_local_node: "{{ inventory_hostname | upper }}"
+connectdirect_secureplus_enabled: true
+
+# Secret naming convention in GCP Secret Manager.
+connectdirect_secret_keystore_password: "{{ secret_prefix }}-connectdirect-keystore-password"
+connectdirect_secret_cert_password: "{{ secret_prefix }}-connectdirect-cert-password"
+connectdirect_secret_admin_password: "{{ secret_prefix }}-connectdirect-admin-password"
+
+# Partner node list should come from group_vars or host_vars.
+connectdirect_partner_nodes: []

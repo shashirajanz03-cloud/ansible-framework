@@ -1,0 +1,34 @@
+---
+- name: Gather Connect:Direct service facts
+  ansible.builtin.service_facts:
+
+- name: Validate Connect:Direct service is running
+  ansible.builtin.assert:
+    that:
+      - ansible_facts.services[connectdirect_service_name + '.service'] is defined
+      - ansible_facts.services[connectdirect_service_name + '.service'].state == 'running'
+    fail_msg: "Connect:Direct service is not running. Check systemd status and application logs."
+
+- name: Validate Connect:Direct install marker exists
+  ansible.builtin.stat:
+    path: "{{ connectdirect_install_marker }}"
+  register: cd_install_marker
+
+- name: Fail when Connect:Direct install marker is missing
+  ansible.builtin.fail:
+    msg: "Connect:Direct installation marker is missing. Installation may not have completed."
+  when: not cd_install_marker.stat.exists
+
+- name: Validate Connect:Direct local port is reachable
+  ansible.builtin.wait_for:
+    host: "127.0.0.1"
+    port: "{{ connectdirect_listen_port }}"
+    timeout: 30
+    state: started
+
+- name: Print Connect:Direct validation summary
+  ansible.builtin.debug:
+    msg:
+      - "Connect:Direct validation completed for {{ inventory_hostname }}"
+      - "Local node: {{ connectdirect_local_node }}"
+      - "Listen port: {{ connectdirect_listen_port }}"

@@ -1,0 +1,35 @@
+---
+- name: Create Connect:Direct runtime group
+  ansible.builtin.group:
+    name: "{{ connectdirect_runtime_group }}"
+    state: present
+
+- name: Create Connect:Direct runtime user
+  ansible.builtin.user:
+    name: "{{ connectdirect_runtime_user }}"
+    group: "{{ connectdirect_runtime_group }}"
+    shell: /sbin/nologin
+    create_home: false
+    state: present
+
+- name: Create Connect:Direct directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ connectdirect_runtime_user }}"
+    group: "{{ connectdirect_runtime_group }}"
+    mode: "0755"
+  loop:
+    - "{{ connectdirect_install_dir }}"
+    - "{{ connectdirect_staging_dir }}"
+    - "{{ connectdirect_installer_extract_dir }}"
+    - "{{ connectdirect_install_dir }}/cfg"
+    - "{{ connectdirect_install_dir }}/logs"
+
+- name: Ensure required OS packages are present
+  ansible.builtin.package:
+    name:
+      - tar
+      - gzip
+      - unzip
+    state: present

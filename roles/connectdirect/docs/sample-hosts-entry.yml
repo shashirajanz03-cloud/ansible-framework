@@ -1,0 +1,8 @@
+all:
+  hosts:
+    devapp01:
+      ansible_host: 10.10.1.20
+      software:
+        - controlm
+        - splunk
+        - connectdirect

@@ -1,0 +1,42 @@
+---
+- name: Download Connect:Direct installer archive
+  ansible.builtin.get_url:
+    url: "{{ connectdirect_installer_source }}"
+    dest: "{{ connectdirect_installer_archive }}"
+    mode: "0644"
+  when: connectdirect_installer_source | length > 0
+
+- name: Extract Connect:Direct installer archive
+  ansible.builtin.unarchive:
+    src: "{{ connectdirect_installer_archive }}"
+    dest: "{{ connectdirect_installer_extract_dir }}"
+    remote_src: true
+    owner: "{{ connectdirect_runtime_user }}"
+    group: "{{ connectdirect_runtime_group }}"
+  when: not ansible_check_mode
+
+- name: Deploy Connect:Direct silent install response file
+  ansible.builtin.template:
+    src: silent_install.properties.j2
+    dest: "{{ connectdirect_staging_dir }}/silent_install.properties"
+    owner: "{{ connectdirect_runtime_user }}"
+    group: "{{ connectdirect_runtime_group }}"
+    mode: "0600"
+
+- name: Run Connect:Direct silent installer
+  ansible.builtin.command:
+    cmd: >-
+      {{ connectdirect_installer_extract_dir }}/install
+      -silent
+      -options {{ connectdirect_staging_dir }}/silent_install.properties
+    creates: "{{ connectdirect_install_marker }}"
+  register: connectdirect_install_result
+  no_log: false
+
+- name: Create Connect:Direct installation marker
+  ansible.builtin.file:
+    path: "{{ connectdirect_install_marker }}"
+    state: touch
+    owner: "{{ connectdirect_runtime_user }}"
+    group: "{{ connectdirect_runtime_group }}"
+    mode: "0644"

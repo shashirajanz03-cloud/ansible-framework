@@ -1,0 +1,14 @@
+---
+- name: Deploy Connect:Direct Secure Plus configuration template
+  ansible.builtin.template:
+    src: secureplus.cfg.j2
+    dest: "{{ connectdirect_install_dir }}/cfg/secureplus.cfg"
+    owner: "{{ connectdirect_runtime_user }}"
+    group: "{{ connectdirect_runtime_group }}"
+    mode: "0600"
+  notify: Restart ConnectDirect
+
+- name: Placeholder for Secure Plus import command
+  ansible.builtin.debug:
+    msg: >-
+      Secure Plus configuration file has been deployed. Replace this placeholder with the approved Connect:Direct Secure Plus CLI import command for your enterprise build.

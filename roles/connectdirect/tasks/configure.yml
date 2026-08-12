@@ -1,0 +1,27 @@
+---
+- name: Deploy Connect:Direct netmap configuration
+  ansible.builtin.template:
+    src: netmap.cfg.j2
+    dest: "{{ connectdirect_install_dir }}/cfg/netmap.cfg"
+    owner: "{{ connectdirect_runtime_user }}"
+    group: "{{ connectdirect_runtime_group }}"
+    mode: "0640"
+  notify: Restart ConnectDirect
+
+- name: Deploy Connect:Direct userfile configuration
+  ansible.builtin.template:
+    src: userfile.cfg.j2
+    dest: "{{ connectdirect_install_dir }}/cfg/userfile.cfg"
+    owner: "{{ connectdirect_runtime_user }}"
+    group: "{{ connectdirect_runtime_group }}"
+    mode: "0640"
+  notify: Restart ConnectDirect
+
+- name: Deploy Connect:Direct init parameters
+  ansible.builtin.template:
+    src: initparm.cfg.j2
+    dest: "{{ connectdirect_install_dir }}/cfg/initparm.cfg"
+    owner: "{{ connectdirect_runtime_user }}"
+    group: "{{ connectdirect_runtime_group }}"
+    mode: "0640"
+  notify: Restart ConnectDirect

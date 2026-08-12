@@ -1,0 +1,16 @@
+[Unit]
+Description=IBM Connect:Direct Service
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=forking
+User={{ connectdirect_runtime_user }}
+Group={{ connectdirect_runtime_group }}
+ExecStart={{ connectdirect_install_dir }}/bin/cdstart
+ExecStop={{ connectdirect_install_dir }}/bin/cdstop
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
